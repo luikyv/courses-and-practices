@@ -8,7 +8,7 @@ logger = logging.Logger("test", level=logging.INFO)
 
 T = 100
 Ns = (5, 50, 50)
-Qs = (30000, 30000, 17000)
+Qs = (30000, 30000, 21000)
 CORRECT, WRONG = 1, -1
 
 
