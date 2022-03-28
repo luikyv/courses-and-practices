@@ -83,13 +83,14 @@ extract_data_from_fixed_width_task = BashOperator(
 
 consolidate_data_task = BashOperator(
     task_id="consolidate_data",
-    bash_command="paste csv_data.csv fixed_width_data.csv tsv_data.csv -d ',' > extracted_data.csv",
+    bash_command=f"cd {STAGING_FOLDER_PATH} && paste csv_data.csv fixed_width_data.csv tsv_data.csv -d ',' > extracted_data.csv",
     dag=dag,
 )
 
 transform_data_task = BashOperator(
     task_id="transform_data",
-    bash_command=f"cd {STAGING_FOLDER_PATH} && " + "awk '$4 = toupper($4)' extracted_data.csv > transformed_data.csv",
+    bash_command=f"cd {STAGING_FOLDER_PATH} && "
+    + "awk -F ',' '{OFS = FS} {$4 = toupper($4)} {print}' extracted_data.csv > transformed_data.csv",
     dag=dag,
 )
 
