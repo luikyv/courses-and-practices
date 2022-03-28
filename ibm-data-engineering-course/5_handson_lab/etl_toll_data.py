@@ -102,4 +102,4 @@ transform_data_task = BashOperator(
     >> extract_data_from_fixed_width_task
     >> consolidate_data_task
     >> transform_data_task
-)  # type: ignore
+)
