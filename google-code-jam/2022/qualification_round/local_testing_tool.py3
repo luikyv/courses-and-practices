@@ -68,7 +68,6 @@ def RunCases():
   Output("{}".format(NUM_CASES))
   correct = 0
   for case_number in range(NUM_CASES):
-    N = int(2*(random.randint(2, 10**5)//2))
     Output("{} {}".format(N, K))
 
     # Construct a graph in adj.
@@ -76,9 +75,9 @@ def RunCases():
     correct_total_edges = 0
     order = [i for i in range(N)]
     random.shuffle(order)
-    for i in range(0, random.randint(100, 1000)):
+    for i in range(0, N, 2):
       v1 = order[i]
-      v2 = order[i+5]
+      v2 = order[i+1]
       adj[v1].append(v2)
       adj[v2].append(v1)
       correct_total_edges += 1
@@ -122,10 +121,10 @@ def RunCases():
         lo = (correct_total_edges * 2 + 2) // 3
         hi = (correct_total_edges * 4) // 3
         if lo <= estimate and estimate <= hi:
-          print(f"Case #{case_number}: Correct -- got {estimate}; exact answer is {correct_total_edges}.", file=sys.stderr)
+          print(f"Case #{case_number + 1}: Correct -- got {estimate}; exact answer is {correct_total_edges}.", file=sys.stderr)
           correct += 1
         else:
-          print(f"Case #{case_number}: Wrong -- got {estimate}; exact answer is {correct_total_edges}; acceptable range is [{lo}, {hi}].", file=sys.stderr)
+          print(f"Case #{case_number + 1}: Wrong -- got {estimate}; exact answer is {correct_total_edges}; acceptable range is [{lo}, {hi}].", file=sys.stderr)
         # Go to the next test case.
         break
       elif move_number == K:
@@ -138,6 +137,9 @@ def RunCases():
         if complement:
           while True:
             next = random.randint(0,N-1)
+            # NOTE: The check for (next != where) was not present at the
+            # beginning of contest. This would, in rare occasions, introduce
+            # self-loops. This bug was never present in the real judge.
             if next != where and next not in adj[where]:
               where = next
               break
@@ -168,7 +170,7 @@ def RunCases():
 def main():
   if len(sys.argv) == 2 and int(sys.argv[1]) < 0:
     sys.exit(0)
-  # random.seed(12345)
+  random.seed(12345)
   try:
     RunCases()
   except Error as error:
