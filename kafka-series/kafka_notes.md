@@ -69,3 +69,18 @@ Consumers can read from the closest replica to improve latency and decrease netw
 It manages brokers. It sends notifications to Kafka in case of changes.
 
 It's being deprecated
+
+## Static Group Membership
+By default, when a cosumer leaves a group, its partitions are revoked and re-assigned. If it joins back, it will have a new member id and new partitions assigned.
+
+If you specify a group.instance.id it makes the consumer **static member**. Then, upon leaving, the consumer has up to session.timeout.ms to join back and get back its partitions, without triggering a rebalance.
+
+## Producer Acknowledgments
+Producers can choose to receive acknowledgments of data writes.
+* Acks = 0: Producer won't wait for acknowledgment (Possible data loss)
+* Acks = 1: Producer will wait for leader acknowledgment (Limeted data loss)
+* Acks = all(-1): Leader + replicas acknowledgment (No data loss)
+
+Common configuration: partitions=3, min.insync.replicas=2 and acks=all.
+
+When acks=all, replication.factor=N and min.insync.replicas=M, we can tolerate at most N-M brokers going down for topic availability purposes.
