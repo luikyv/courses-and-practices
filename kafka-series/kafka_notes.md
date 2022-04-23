@@ -84,3 +84,9 @@ Producers can choose to receive acknowledgments of data writes.
 Common configuration: partitions=3, min.insync.replicas=2 and acks=all.
 
 When acks=all, replication.factor=N and min.insync.replicas=M, we can tolerate at most N-M brokers going down for topic availability purposes.
+
+
+## Delivery Semantics for Consumers
+* At most once: Offsets are commited as soon as the message is received. If the processing goes wrong, the message will be lost(it won't be read again).
+* At least once (preferred): Offsets are commited after the message is processed. If the processing goes wrong, the message will be read again. This can result in duplicate processing of messages. Then, make sure your processing is idempotent.
+* Exacly once: Can be achieved using the Transactional API.
